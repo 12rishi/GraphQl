@@ -1,6 +1,8 @@
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import React, { useContext } from "react";
 import { AuthContext } from "./AuthContext";
+import firebase from "firebase/compat/app";
+import { auth } from "./firebaseCOnfig";
 const getAllPost = gql`
   {
     allPost {
@@ -17,6 +19,10 @@ const Home = () => {
   const { state, dispatch } = useContext(AuthContext);
   const handleDispatch = () => {
     dispatch({ type: "LOGGED_IN", payload: "Rishi" });
+  };
+  const handleLogout = async () => {
+    await auth.signOut(); //handle logout
+    dispatch({ type: "LOGGED_IN", payload: null });
   };
 
   if (loading) return <h1>loading.........</h1>;
@@ -35,6 +41,7 @@ const Home = () => {
         CLick for change userName
       </button>
       {state.user}
+      <button onClick={() => handleLogout()}>logout</button>
     </div>
   );
 };
